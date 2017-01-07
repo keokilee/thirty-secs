@@ -2,6 +2,10 @@
   <h2>Thirty Seconds</h2>
 </div>
 
+<div class="row">
+  <h1 id="message"></h1>
+</div>
+
 <div class="row marketing">
   <div class="col-lg-6">
     <button class='start'>Click to start</button>

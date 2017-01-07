@@ -20,7 +20,8 @@ defmodule ThirtySeconds.Router do
   end
 
   # Other scopes may use custom stacks.
-  # scope "/api", ThirtySeconds do
-  #   pipe_through :api
-  # end
+  scope "/api", ThirtySeconds do
+    pipe_through :api
+    get "/ping", GameController, :ping
+  end
 end

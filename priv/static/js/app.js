@@ -11884,26 +11884,17 @@ process.umask = function() { return 0; };
   })();
 });
 require.register("web/static/js/app.js", function(exports, require, module) {
-"use strict";
+'use strict';
 
-require("phoenix_html");
+require('phoenix_html');
 
-var _socket = require("./socket");
-
-var _socket2 = _interopRequireDefault(_socket);
-
-var _jquery = require("jquery");
+var _jquery = require('jquery');
 
 var _jquery2 = _interopRequireDefault(_jquery);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-// Import local files
-//
-// Local files can be imported directly using relative
-// paths "./socket" or full ones "web/static/js/socket".
-
-var $startButton = void 0; // Brunch automatically concatenates all files in your
+// Brunch automatically concatenates all files in your
 // watched paths. Those paths can be configured at
 // config.paths.watched in "brunch-config.js".
 //
@@ -11916,110 +11907,104 @@ var $startButton = void 0; // Brunch automatically concatenates all files in you
 //
 // If you no longer want to use a dependency, remember
 // to also remove its path from "config.paths.watched".
+var $startButton = void 0;
+
+// Import local files
+//
+// Local files can be imported directly using relative
+// paths "./socket" or full ones "web/static/js/socket".
+
+// import socket from "./socket"
 
 var $endButton = void 0;
 var xhrRequest = void 0;
+var cancelled = void 0;
+var startDate = void 0;
+var endDate = void 0;
+var recognition = void 0;
+var messageInterval = void 0;
 
 (0, _jquery2.default)(function () {
   $startButton = (0, _jquery2.default)('.start');
   $endButton = (0, _jquery2.default)('.stop');
 
   $startButton.click(handleStart);
-
   $endButton.click(handleEnd);
+
+  if (window.webkitSpeechRecognition) {
+    startVoiceRecognition();
+  }
 });
 
 function handleStart() {
-  var startDate = new Date();
+  startDate = Date.now();
+  (0, _jquery2.default)('#message').html('Good luck');
+
   $startButton.prop('disabled', true);
   $endButton.prop('disabled', false);
-  console.log("starting at " + startDate);
+  cancelled = false;
 
-  // Trigger AJAX request to ping.
-  xhrRequest = _jquery2.default.get('/ping');
+  xhrRequest = startAjaxRequest();
+}
+
+function startAjaxRequest() {
+  return _jquery2.default.get('/api/ping').done(function () {
+    $startButton.prop('disabled', false);
+    $endButton.prop('disabled', true);
+    (0, _jquery2.default)('#message').html('You went over the time limit!');
+  }).fail(function () {
+    $startButton.prop('disabled', false);
+    $endButton.prop('disabled', true);
+    if (cancelled) {
+      // Take the difference between start and end
+      (0, _jquery2.default)('#message').html('Awesome! Your score: ' + (endDate - startDate));
+    } else {
+      (0, _jquery2.default)('#message').html('You went over the time limit!');
+    }
+  });
 }
 
 function handleEnd() {
-  var endDate = new Date();
-  $startButton.prop('disabled', false);
-  $endButton.prop('disabled', true);
-  console.log("stopping at " + endDate);
+  endDate = Date.now();
+  cancelled = true;
 
   xhrRequest.abort();
+}
+
+function startVoiceRecognition() {
+  console.log('recognize');
+  recognition = new webkitSpeechRecognition();
+  recognition.continuous = true;
+  recognition.interimResults = true;
+  recognition.lang = 'en-US';
+
+  recognition.onstart = function () {
+    console.log('recognition start');
+  };
+  recognition.onresult = function (event) {
+    var result = event.results[event.resultIndex][0];
+
+    if (result.transcript.match(/start/) && _jquery2.default.active === 0) {
+      handleStart();
+    } else if (result.transcript.match(/stop/) && _jquery2.default.active > 0) {
+      handleEnd();
+    }
+  };
+
+  recognition.start();
+}
+
+function startMessageDisplay() {
+  interval = setInterval(function () {
+    (0, _jquery2.default)('#message').html('Good luck');
+  }, 5000);
 }
 });
 
 ;require.register("web/static/js/socket.js", function(exports, require, module) {
 "use strict";
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
 var _phoenix = require("phoenix");
-
-var socket = new _phoenix.Socket("/socket", { params: { token: window.userToken } });
-
-// When you connect, you'll often need to authenticate the client.
-// For example, imagine you have an authentication plug, `MyAuth`,
-// which authenticates the session and assigns a `:current_user`.
-// If the current user exists you can assign the user's token in
-// the connection for use in the layout.
-//
-// In your "web/router.ex":
-//
-//     pipeline :browser do
-//       ...
-//       plug MyAuth
-//       plug :put_user_token
-//     end
-//
-//     defp put_user_token(conn, _) do
-//       if current_user = conn.assigns[:current_user] do
-//         token = Phoenix.Token.sign(conn, "user socket", current_user.id)
-//         assign(conn, :user_token, token)
-//       else
-//         conn
-//       end
-//     end
-//
-// Now you need to pass this token to JavaScript. You can do so
-// inside a script tag in "web/templates/layout/app.html.eex":
-//
-//     <script>window.userToken = "<%= assigns[:user_token] %>";</script>
-//
-// You will need to verify the user token in the "connect/2" function
-// in "web/channels/user_socket.ex":
-//
-//     def connect(%{"token" => token}, socket) do
-//       # max_age: 1209600 is equivalent to two weeks in seconds
-//       case Phoenix.Token.verify(socket, "user socket", token, max_age: 1209600) do
-//         {:ok, user_id} ->
-//           {:ok, assign(socket, :user, user_id)}
-//         {:error, reason} ->
-//           :error
-//       end
-//     end
-//
-// Finally, pass the token on connect as below. Or remove it
-// from connect if you don't care about authentication.
-
-// NOTE: The contents of this file will only be executed if
-// you uncomment its entry in "web/static/js/app.js".
-
-// To use Phoenix channels, the first step is to import Socket
-// and connect at the socket path in "lib/my_app/endpoint.ex":
-socket.connect();
-
-// Now that you are connected, you can join channels with a topic:
-var channel = socket.channel("topic:subtopic", {});
-channel.join().receive("ok", function (resp) {
-  console.log("Joined successfully", resp);
-}).receive("error", function (resp) {
-  console.log("Unable to join", resp);
-});
-
-exports.default = socket;
 });
 
 ;require.alias("phoenix_html/priv/static/phoenix_html.js", "phoenix_html");
