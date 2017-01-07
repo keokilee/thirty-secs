@@ -1,1 +1,37 @@
 /* This file is for your main application css. */
+.header h2 {
+  text-align: center;
+}
+
+.flex-row {
+  display: flex;
+}
+
+.container {
+  flex: 1;
+  text-align: center;
+}
+
+.container button {
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+
+}
+
+.start {
+  background-color: #080;
+}
+
+.start:disabled {
+  background-color: #6A6;
+}
+
+.stop {
+  background-color: red;
+}
+
+.stop:disabled {
+  background-color: #F88;
+}
