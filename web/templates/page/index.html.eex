@@ -1,0 +1,13 @@
+<div class="jumbotron">
+  <h2>Thirty Seconds</h2>
+</div>
+
+<div class="row marketing">
+  <div class="col-lg-6">
+    <button class='start'>Click to start</button>
+  </div>
+
+  <div class="col-lg-6">
+    <button class='stop' disabled>Click to stop</button>
+  </div>
+</div>
