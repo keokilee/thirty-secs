@@ -11927,8 +11927,30 @@ var gifInterval = void 0;
 var gifs = [];
 var $ads = (0, _jquery2.default)('.ads');
 var $message = void 0;
+var $poop = (0, _jquery2.default)('.poop');
 
 loadGifs();
+
+function getRandomInt(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min)) + min;
+}
+
+function movePoop() {
+  $poop.addClass('show');
+  var randomWidth = getRandomInt(0, (0, _jquery2.default)(window).width());
+  var randomHeight = getRandomInt(0, (0, _jquery2.default)(window).height());
+  $poop.css('transform', 'translate(' + randomWidth + 'px, ' + randomHeight + 'px)');
+  $poop.on('transitionend', movePoop);
+}
+
+function stopPoop() {
+  var halfWidth = (0, _jquery2.default)(window).width() / 2;
+  var halfHeight = (0, _jquery2.default)(window).height() / 2;
+  $poop.off('transitionend', movePoop);
+  $poop.css('transform', 'translate(' + (halfWidth - 83) + 'px, ' + (halfHeight - 80) + 'px)');
+}
 
 (0, _jquery2.default)(function () {
   $startButton = (0, _jquery2.default)('.start');
@@ -11936,7 +11958,9 @@ loadGifs();
   $message = (0, _jquery2.default)('#message');
 
   $startButton.click(handleStart);
+  $startButton.click(movePoop);
   $endButton.click(handleEnd);
+  $endButton.click(stopPoop);
 
   if (window.webkitSpeechRecognition) {
     startVoiceRecognition();

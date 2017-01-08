@@ -9,7 +9,7 @@ defmodule ThirtySeconds do
     # Define workers and child supervisors to be supervised
     children = [
       # Start the Ecto repository
-      supervisor(ThirtySeconds.Repo, []),
+      # supervisor(ThirtySeconds.Repo, []),
       # Start the endpoint when the application starts
       supervisor(ThirtySeconds.Endpoint, []),
       # Start your own worker by calling: ThirtySeconds.Worker.start_link(arg1, arg2, arg3)

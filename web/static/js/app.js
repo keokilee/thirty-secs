@@ -33,8 +33,30 @@ let gifInterval
 let gifs = []
 let $ads = $('.ads')
 let $message
+let $poop = $('.poop')
 
 loadGifs()
+
+function getRandomInt(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min)) + min;
+}
+
+function movePoop() {
+  $poop.addClass('show')
+  let randomWidth = getRandomInt(0, $(window).width())
+  let randomHeight = getRandomInt(0, $(window).height())
+  $poop.css('transform', `translate(${randomWidth}px, ${randomHeight}px)`)
+  $poop.on('transitionend', movePoop)
+}
+
+function stopPoop() {
+  let halfWidth = $(window).width() / 2;
+  let halfHeight = $(window).height() / 2;
+  $poop.off('transitionend', movePoop)
+  $poop.css('transform', `translate(${halfWidth - 83}px, ${halfHeight - 80}px)`)
+}
 
 $(() => {
   $startButton = $('.start')
@@ -42,7 +64,9 @@ $(() => {
   $message = $('#message')
 
   $startButton.click(handleStart)
+  $startButton.click(movePoop)
   $endButton.click(handleEnd)
+  $endButton.click(stopPoop)
 
   if (window.webkitSpeechRecognition) {
     startVoiceRecognition()
