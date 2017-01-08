@@ -118,5 +118,11 @@ form.link, form.button {
   background-color: #F88;
 }
 
+.ads-container {
+  text-align: center;
+  flex: 1;
+  padding: 20px;
+}
+
 
 /*# sourceMappingURL=app.css.map*/

@@ -18,3 +18,10 @@
     <button class='stop' disabled>Click to stop</button>
   </div>
 </div>
+
+<div class="flex-row">
+  <div class="ads-container">
+    <h2 id="ads-title"></h2>
+    <div class="ads"></div>
+  </div>
+</div>

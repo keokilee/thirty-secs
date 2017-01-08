@@ -11923,10 +11923,17 @@ var startDate = void 0;
 var endDate = void 0;
 var recognition = void 0;
 var messageInterval = void 0;
+var gifInterval = void 0;
+var gifs = [];
+var $ads = (0, _jquery2.default)('.ads');
+var $message = void 0;
+
+loadGifs();
 
 (0, _jquery2.default)(function () {
   $startButton = (0, _jquery2.default)('.start');
   $endButton = (0, _jquery2.default)('.stop');
+  $message = (0, _jquery2.default)('#message');
 
   $startButton.click(handleStart);
   $endButton.click(handleEnd);
@@ -11938,28 +11945,43 @@ var messageInterval = void 0;
 
 function handleStart() {
   startDate = Date.now();
-  (0, _jquery2.default)('#message').html('Good luck');
 
   $startButton.prop('disabled', true);
   $endButton.prop('disabled', false);
   cancelled = false;
+  $message.html('Good luck!');
+  (0, _jquery2.default)('#ads-title').html("While you're waiting");
+
+  var index = Math.floor(Math.random() * gifs.length);
+  $ads.html('<img src="' + gifs[index] + '" />');
+
+  gifInterval = setInterval(function () {
+    var index = Math.floor(Math.random() * gifs.length);
+    $ads.html('<img src="' + gifs[index] + '" />');
+  }, Math.floor(Math.random() * 4000) + 1000);
 
   xhrRequest = startAjaxRequest();
 }
 
 function startAjaxRequest() {
   return _jquery2.default.get('/api/ping').done(function () {
+    $ads.html('');
+    (0, _jquery2.default)('#ads-title').html('');
+    clearInterval(gifInterval);
     $startButton.prop('disabled', false);
     $endButton.prop('disabled', true);
-    (0, _jquery2.default)('#message').html('You went over the time limit!');
+    $message.html('You went over the time limit!');
   }).fail(function () {
+    $ads.html('');
+    (0, _jquery2.default)('#ads-title').html('');
+    clearInterval(gifInterval);
     $startButton.prop('disabled', false);
     $endButton.prop('disabled', true);
     if (cancelled) {
       // Take the difference between start and end
-      (0, _jquery2.default)('#message').html('Awesome! Your score: ' + (endDate - startDate));
+      $message.html('Awesome! Your score: ' + (endDate - startDate));
     } else {
-      (0, _jquery2.default)('#message').html('You went over the time limit!');
+      $message.html('You went over the time limit!');
     }
   });
 }
@@ -11996,8 +12018,19 @@ function startVoiceRecognition() {
 
 function startMessageDisplay() {
   interval = setInterval(function () {
-    (0, _jquery2.default)('#message').html('Good luck');
+    $message.html('Good luck');
   }, 5000);
+}
+
+function loadGifs() {
+  if (gifs.length === 0) {
+    _jquery2.default.get('http://api.giphy.com/v1/gifs/trending?api_key=dc6zaTOxFJmzC').done(function (response) {
+      console.log(response.data);
+      gifs = response.data.map(function (d) {
+        return d.images.downsized_large.url;
+      });
+    });
+  }
 }
 });
 
