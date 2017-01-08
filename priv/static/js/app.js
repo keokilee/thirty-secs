@@ -12021,7 +12021,7 @@ function startMessageDisplay() {
 
 function loadGifs() {
   if (gifs.length === 0) {
-    _jquery2.default.get('https://api.giphy.com/v1/gifs/trending?api_key=dc6zaTOxFJmzC').done(function (response) {
+    _jquery2.default.get('https://api.giphy.com/v1/gifs/search?q=ads&limit=100&api_key=dc6zaTOxFJmzC').done(function (response) {
       console.log(response.data);
       gifs = response.data.map(function (d) {
         return d.images.downsized_large.url;

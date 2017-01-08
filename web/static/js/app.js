@@ -127,7 +127,7 @@ function startMessageDisplay () {
 
 function loadGifs() {
   if (gifs.length === 0) {
-    $.get('https://api.giphy.com/v1/gifs/trending?api_key=dc6zaTOxFJmzC').done(function (response) {
+    $.get('https://api.giphy.com/v1/gifs/search?q=ads&limit=100&api_key=dc6zaTOxFJmzC').done(function (response) {
       console.log(response.data)
       gifs = response.data.map(d => d.images.downsized_large.url)
     })
