@@ -11942,13 +11942,14 @@ function movePoop() {
   var randomWidth = getRandomInt(0, (0, _jquery2.default)(window).width());
   var randomHeight = getRandomInt(0, (0, _jquery2.default)(window).height());
   $poop.css('transform', 'translate(' + randomWidth + 'px, ' + randomHeight + 'px)');
+  $poop.off('transitionend');
   $poop.on('transitionend', movePoop);
 }
 
 function stopPoop() {
   var halfWidth = (0, _jquery2.default)(window).width() / 2;
   var halfHeight = (0, _jquery2.default)(window).height() / 2;
-  $poop.off('transitionend', movePoop);
+  $poop.off('transitionend');
   $poop.css('transform', 'translate(' + (halfWidth - 83) + 'px, ' + (halfHeight - 80) + 'px)');
 }
 

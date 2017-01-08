@@ -48,13 +48,14 @@ function movePoop() {
   let randomWidth = getRandomInt(0, $(window).width())
   let randomHeight = getRandomInt(0, $(window).height())
   $poop.css('transform', `translate(${randomWidth}px, ${randomHeight}px)`)
+  $poop.off('transitionend')
   $poop.on('transitionend', movePoop)
 }
 
 function stopPoop() {
   let halfWidth = $(window).width() / 2;
   let halfHeight = $(window).height() / 2;
-  $poop.off('transitionend', movePoop)
+  $poop.off('transitionend')
   $poop.css('transform', `translate(${halfWidth - 83}px, ${halfHeight - 80}px)`)
 }
 
