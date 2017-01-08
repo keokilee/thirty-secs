@@ -64,9 +64,7 @@ $(() => {
   $message = $('#message')
 
   $startButton.click(handleStart)
-  $startButton.click(movePoop)
   $endButton.click(handleEnd)
-  $endButton.click(stopPoop)
 
   if (window.webkitSpeechRecognition) {
     startVoiceRecognition()
@@ -75,7 +73,7 @@ $(() => {
 
 function handleStart () {
   startDate = Date.now()
-
+  movePoop()
   $startButton.prop('disabled', true)
   $endButton.prop('disabled', false)
   cancelled = false
@@ -96,6 +94,7 @@ function handleStart () {
 function startAjaxRequest () {
   return $.get('/api/ping').done(() => {
     $ads.html('')
+    stopPoop()
     $('#ads-title').html('')
     clearInterval(gifInterval)
     $startButton.prop('disabled', false)
@@ -103,6 +102,7 @@ function startAjaxRequest () {
     $message.html('You went over the time limit!')
   }).fail(() => {
     $ads.html('')
+    stopPoop()
     $('#ads-title').html('')
     clearInterval(gifInterval)
     $startButton.prop('disabled', false)
