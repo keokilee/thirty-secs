@@ -41,3 +41,18 @@
   flex: 1;
   padding: 20px;
 }
+
+.poop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  transition: transform 300ms ease;
+  transform: translate(0,0);
+
+  opacity: 0;
+  pointer-events: none;
+}
+
+.poop.show {
+  opacity: 1;
+}

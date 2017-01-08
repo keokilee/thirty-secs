@@ -14,6 +14,9 @@
   <body>
     <div class="container">
       <main role="main">
+        <div class="poop">
+          <img src="/images/poopicorn.png" alt="" />
+        </div>
         <%= render @view_module, @view_template, assigns %>
       </main>
     </div> <!-- /container -->
