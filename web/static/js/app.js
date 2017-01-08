@@ -106,9 +106,6 @@ function startVoiceRecognition() {
   recognition.interimResults = true
   recognition.lang = 'en-US'
 
-  recognition.onstart = function () {
-    console.log('recognition start')
-  }
   recognition.onresult = function(event) {
     const result = event.results[event.resultIndex][0]
 
@@ -130,7 +127,7 @@ function startMessageDisplay () {
 
 function loadGifs() {
   if (gifs.length === 0) {
-    $.get('http://api.giphy.com/v1/gifs/trending?api_key=dc6zaTOxFJmzC').done(function (response) {
+    $.get('https://api.giphy.com/v1/gifs/trending?api_key=dc6zaTOxFJmzC').done(function (response) {
       console.log(response.data)
       gifs = response.data.map(d => d.images.downsized_large.url)
     })
