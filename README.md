@@ -1,4 +1,6 @@
-# ThirtySeconds
+# Thirty Seconds
+
+https://thirty-secs.herokuapp.com
 
 To start your Phoenix app:
 
